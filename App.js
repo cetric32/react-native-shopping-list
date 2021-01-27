@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import {StyleSheet, FlatList, SafeAreaView} from 'react-native';
+import {StyleSheet, FlatList, SafeAreaView, View, Text} from 'react-native';
 import AddItem from './components/AddItem';
 import Header from './components/Header';
 import ListItem from './components/ListItem';
@@ -63,8 +63,16 @@ export default function App() {
       });
   };
 
-  const addNewItem = (text) => {
-    setItems([{id: Math.random().toString(), text: text}, ...items]);
+  const addNewItem = (text, price = 0, quantity = 1) => {
+    setItems([
+      {
+        id: Math.random().toString(),
+        text: text,
+        price: price,
+        quantity: quantity,
+      },
+      ...items,
+    ]);
     save_data_to_file();
   };
 
@@ -72,6 +80,14 @@ export default function App() {
     <SafeAreaView style={styles.container}>
       <Header />
       <AddItem addNewItem={addNewItem} />
+      {items.length > 0 ? (
+        <View style={styles.headeView}>
+          <Text>ITEM</Text>
+          <Text>PRICE</Text>
+          <Text>QUANTITY</Text>
+          <Text />
+        </View>
+      ) : null}
       <FlatList
         data={items}
         renderItem={({item}) => {
@@ -85,5 +101,12 @@ export default function App() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+  },
+  headeView: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    padding: 5,
+    fontSize: 25,
   },
 });

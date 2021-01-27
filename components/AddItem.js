@@ -11,6 +11,8 @@ import Icon from 'react-native-vector-icons/dist/FontAwesome';
 
 export default function AddItem({addNewItem}) {
   const [text, setText] = useState('');
+  const [price, setPrice] = useState(0);
+  const [quantity, setQuantity] = useState(1);
 
   const onChange = (textValue) => {
     setText(textValue);
@@ -21,8 +23,10 @@ export default function AddItem({addNewItem}) {
       Alert.alert('No Item', 'Please Enter an Item', [{text: 'Ok'}]);
       return;
     }
-    addNewItem(text);
+    addNewItem(text, price, quantity);
     setText('');
+    setPrice(0);
+    setQuantity(1);
   };
 
   return (
@@ -33,6 +37,31 @@ export default function AddItem({addNewItem}) {
         style={styles.input}
         onChangeText={onChange}
       />
+
+      {text ? (
+        <TextInput
+          keyboardType="numeric"
+          value={price}
+          placeholder="Add Price..."
+          style={styles.input}
+          onChangeText={(value) => {
+            setPrice(value);
+          }}
+        />
+      ) : null}
+
+      {price > 0 ? (
+        <TextInput
+          keyboardType="numeric"
+          value={quantity}
+          placeholder="Add Quantity..."
+          style={styles.input}
+          onChangeText={(value) => {
+            setQuantity(value);
+          }}
+        />
+      ) : null}
+
       <TouchableOpacity style={styles.btn} onPress={addItem}>
         <Text style={styles.btnText}>
           <Icon name="plus" size={20} /> Add Item

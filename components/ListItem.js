@@ -3,12 +3,18 @@ import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import Icon from 'react-native-vector-icons/dist/FontAwesome';
 export default function ListItem({item, deleteItem}) {
   console.log(item.text);
+
+  const formatNumber = (number) => {
+    return number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+  };
   return (
     <TouchableOpacity style={styles.listItem}>
       <View style={styles.listItemView}>
         <Text style={styles.listItemText}>{item.text}</Text>
+        <Text style={styles.listItemText}>{formatNumber(item.price)}</Text>
+        <Text style={styles.listItemText}>{formatNumber(item.quantity)}</Text>
         <Icon
-          name="remove"
+          name="trash"
           size={20}
           color="firebrick"
           onPress={() => {
