@@ -106,7 +106,8 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    padding: 5,
+    paddingHorizontal: 15,
+    paddingVertical: 5,
     fontSize: 25,
   },
 });
