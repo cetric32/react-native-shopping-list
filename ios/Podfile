@@ -10,6 +10,7 @@ target 'shopping' do
 
   pod 'RNVectorIcons', :path => '../node_modules/react-native-vector-icons'
 
+
   target 'shoppingTests' do
     inherit! :complete
     # Pods for testing
