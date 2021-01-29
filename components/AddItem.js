@@ -11,8 +11,8 @@ import Icon from 'react-native-vector-icons/dist/FontAwesome';
 
 export default function AddItem({addNewItem}) {
   const [text, setText] = useState('');
-  const [price, setPrice] = useState(0);
-  const [quantity, setQuantity] = useState(1);
+  const [price, setPrice] = useState('');
+  const [quantity, setQuantity] = useState('');
 
   const onChange = (textValue) => {
     setText(textValue);
@@ -25,8 +25,8 @@ export default function AddItem({addNewItem}) {
     }
     addNewItem(text, price, quantity);
     setText('');
-    setPrice(0);
-    setQuantity(1);
+    setPrice('');
+    setQuantity('');
   };
 
   return (
@@ -41,7 +41,7 @@ export default function AddItem({addNewItem}) {
       {text ? (
         <TextInput
           keyboardType="numeric"
-          value={price}
+          value={price.toString()}
           placeholder="Add Price..."
           style={styles.input}
           onChangeText={(value) => {
@@ -53,7 +53,7 @@ export default function AddItem({addNewItem}) {
       {price > 0 ? (
         <TextInput
           keyboardType="numeric"
-          value={quantity}
+          value={quantity.toString()}
           placeholder="Add Quantity..."
           style={styles.input}
           onChangeText={(value) => {

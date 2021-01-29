@@ -3,30 +3,26 @@ import {StyleSheet, FlatList, SafeAreaView, View, Text} from 'react-native';
 import AddItem from './components/AddItem';
 import Header from './components/Header';
 import ListItem from './components/ListItem';
-import RNFS from 'react-native-fs';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export default function App() {
   const [items, setItems] = useState([]);
 
   useEffect(() => {
-    let path = RNFS.DocumentDirectoryPath + '/shopping.json';
-    RNFS.exists(path)
-      .then((result) => {
-        if (result) {
-          // if we have a file, read it
-          return RNFS.readFile(path);
-        } else {
-          return false;
-        }
-      })
-      .then((content) => {
-        console.log(content);
-        if (content) {
-          setItems(JSON.parse(content));
-        }
-      })
-      .catch((err) => console.log(err.message, err.code));
+    getData().then((result) => {
+      setItems(result);
+    });
   }, []);
+
+  const storeData = async (value) => {
+    try {
+      const jsonValue = JSON.stringify(value);
+      await AsyncStorage.setItem('shopping', jsonValue);
+      return true;
+    } catch (e) {
+      console.log('save data error', e);
+    }
+  };
 
   const deleteItem = (id) => {
     setItems((prevItems) => {
@@ -35,65 +31,66 @@ export default function App() {
       });
     });
 
-    save_data_to_file();
+    getData().then((result) => {
+      let newResult = result.filter((item) => {
+        return item.id !== id;
+      });
+
+      storeData(newResult).then((res) => {
+        if (res) {
+          setItems(newResult);
+        }
+      });
+    });
   };
 
-  const save_data_to_file = () => {
-    let path = RNFS.DocumentDirectoryPath + '/shopping.json';
-
-    RNFS.exists(path)
-      .then((result) => {
-        return result;
-      })
-      .then((content) => {
-        if (content) {
-          return RNFS.unlink(path);
-        } else {
-          return true;
-        }
-      })
-      .then(() => {
-        return RNFS.writeFile(path, JSON.stringify(items));
-      })
-      .then((success) => {
-        console.log('FILE WRITTEN!');
-      })
-      .catch((err) => {
-        console.log(err.message, err.code);
-      });
+  const getData = async () => {
+    try {
+      const jsonValue = await AsyncStorage.getItem('shopping');
+      let result = jsonValue != null ? JSON.parse(jsonValue) : [];
+      return result;
+    } catch (e) {
+      console.log('error reading value', e);
+    }
   };
 
   const addNewItem = (text, price = 0, quantity = 1) => {
-    setItems([
-      {
+    getData().then((result) => {
+      result.unshift({
         id: Math.random().toString(),
         text: text,
         price: price,
         quantity: quantity,
-      },
-      ...items,
-    ]);
-    save_data_to_file();
+      });
+
+      storeData(result).then((res) => {
+        if (res) {
+          setItems(result);
+        }
+      });
+    });
   };
 
   return (
     <SafeAreaView style={styles.container}>
       <Header />
       <AddItem addNewItem={addNewItem} />
-      {items.length > 0 ? (
-        <View style={styles.headeView}>
+      {items && items.length > 0 ? (
+        <View style={styles.headerView}>
           <Text>ITEM</Text>
           <Text>PRICE</Text>
           <Text>QUANTITY</Text>
           <Text />
         </View>
       ) : null}
-      <FlatList
-        data={items}
-        renderItem={({item}) => {
-          return <ListItem item={item} deleteItem={deleteItem} />;
-        }}
-      />
+      {items ? (
+        <FlatList
+          data={items}
+          renderItem={({item}) => {
+            return <ListItem item={item} deleteItem={deleteItem} />;
+          }}
+        />
+      ) : null}
     </SafeAreaView>
   );
 }
@@ -102,7 +99,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
   },
-  headeView: {
+  headerView: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
