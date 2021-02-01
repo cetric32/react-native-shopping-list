@@ -23,6 +23,17 @@ export default function AddItem({addNewItem}) {
       Alert.alert('No Item', 'Please Enter an Item', [{text: 'Ok'}]);
       return;
     }
+
+    if (isNaN(price)) {
+      Alert.alert('Invalid Price', 'Please Enter a Number', [{text: 'Ok'}]);
+      return;
+    }
+
+    if (isNaN(quantity)) {
+      Alert.alert('Invalid Quantity', 'Please Enter a Number', [{text: 'Ok'}]);
+      return;
+    }
+
     addNewItem(text, price, quantity);
     setText('');
     setPrice('');

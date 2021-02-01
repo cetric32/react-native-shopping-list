@@ -4,6 +4,7 @@ import AddItem from './components/AddItem';
 import Header from './components/Header';
 import ListItem from './components/ListItem';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import Icon from 'react-native-vector-icons/dist/FontAwesome5';
 
 export default function App() {
   const [items, setItems] = useState([]);
@@ -77,20 +78,34 @@ export default function App() {
       <AddItem addNewItem={addNewItem} />
       {items && items.length > 0 ? (
         <View style={styles.headerView}>
-          <Text>ITEM</Text>
-          <Text>PRICE</Text>
-          <Text>QUANTITY</Text>
+          <Text style={styles.headerText}>ITEM</Text>
+          <Text style={styles.headerText}>QUANTITY</Text>
+          <Text style={styles.headerText}>PRICE</Text>
           <Text />
         </View>
       ) : null}
-      {items ? (
+      {items && items.length > 0 ? (
         <FlatList
           data={items}
           renderItem={({item}) => {
             return <ListItem item={item} deleteItem={deleteItem} />;
           }}
         />
-      ) : null}
+      ) : (
+        <View style={styles.emptyViewContainer}>
+          <View style={styles.emptyIconView}>
+            <Icon name="list" size={35} style={styles.emptyIcon} />
+          </View>
+          <View style={styles.emptyViewHeader}>
+            <Text style={styles.emptyTextHeader}>Your List is Empty</Text>
+          </View>
+          <View style={styles.emptyContentView}>
+            <Text style={styles.emptyContentText}>
+              Start adding things you need to make sure nothing is left behind.
+            </Text>
+          </View>
+        </View>
+      )}
     </SafeAreaView>
   );
 }
@@ -106,5 +121,32 @@ const styles = StyleSheet.create({
     paddingHorizontal: 15,
     paddingVertical: 5,
     fontSize: 25,
+  },
+  headerText: {color: 'darkslateblue'},
+  emptyViewContainer: {
+    alignItems: 'center',
+    margin: 3,
+  },
+  emptyViewHeader: {
+    margin: 3,
+  },
+  emptyTextHeader: {fontWeight: 'bold'},
+  emptyContentText: {
+    padding: 20,
+    textAlign: 'center',
+  },
+  emptyContentView: {
+    width: '70%',
+  },
+  emptyIconView: {
+    width: 80,
+    height: 80,
+    backgroundColor: '#e3ebfa',
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderRadius: 80,
+  },
+  emptyIcon: {
+    color: 'blue',
   },
 });
