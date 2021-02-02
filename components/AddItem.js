@@ -19,22 +19,7 @@ export default function AddItem({addNewItem}) {
   };
 
   const addItem = () => {
-    if (!text) {
-      Alert.alert('No Item', 'Please Enter an Item', [{text: 'Ok'}]);
-      return;
-    }
-
-    if (isNaN(price)) {
-      Alert.alert('Invalid Price', 'Please Enter a Number', [{text: 'Ok'}]);
-      return;
-    }
-
-    if (isNaN(quantity)) {
-      Alert.alert('Invalid Quantity', 'Please Enter a Number', [{text: 'Ok'}]);
-      return;
-    }
-
-    addNewItem(text, price, quantity);
+    addNewItem(text, price, quantity < 1 ? 1 : quantity);
     setText('');
     setPrice('');
     setQuantity('');
@@ -48,30 +33,6 @@ export default function AddItem({addNewItem}) {
         style={styles.input}
         onChangeText={onChange}
       />
-
-      {text ? (
-        <TextInput
-          keyboardType="numeric"
-          value={price.toString()}
-          placeholder="Add Price..."
-          style={styles.input}
-          onChangeText={(value) => {
-            setPrice(value);
-          }}
-        />
-      ) : null}
-
-      {price > 0 ? (
-        <TextInput
-          keyboardType="numeric"
-          value={quantity.toString()}
-          placeholder="Add Quantity..."
-          style={styles.input}
-          onChangeText={(value) => {
-            setQuantity(value);
-          }}
-        />
-      ) : null}
 
       <TouchableOpacity style={styles.btn} onPress={addItem}>
         <Text style={styles.btnText}>

@@ -1,5 +1,12 @@
 import React, {useEffect, useState} from 'react';
-import {StyleSheet, FlatList, SafeAreaView, View, Text} from 'react-native';
+import {
+  StyleSheet,
+  FlatList,
+  SafeAreaView,
+  View,
+  Text,
+  Alert,
+} from 'react-native';
 import AddItem from './components/AddItem';
 import Header from './components/Header';
 import ListItem from './components/ListItem';
@@ -56,6 +63,21 @@ export default function App() {
   };
 
   const addNewItem = (text, price = 0, quantity = 1) => {
+    if (!text) {
+      Alert.alert('No Item', 'Please Enter an Item', [{text: 'Ok'}]);
+      return;
+    }
+
+    if (isNaN(price)) {
+      Alert.alert('Invalid Price', 'Please Enter a Number', [{text: 'Ok'}]);
+      return;
+    }
+
+    if (isNaN(quantity)) {
+      Alert.alert('Invalid Quantity', 'Please Enter a Number', [{text: 'Ok'}]);
+      return;
+    }
+
     getData().then((result) => {
       result.unshift({
         id: Math.random().toString(),
@@ -77,19 +99,12 @@ export default function App() {
       <Header />
       <AddItem addNewItem={addNewItem} />
       {items && items.length > 0 ? (
-        <View style={styles.headerView}>
-          <Text style={styles.headerText}>ITEM</Text>
-          <Text style={styles.headerText}>QUANTITY</Text>
-          <Text style={styles.headerText}>PRICE</Text>
-          <Text />
-        </View>
-      ) : null}
-      {items && items.length > 0 ? (
         <FlatList
           data={items}
           renderItem={({item}) => {
             return <ListItem item={item} deleteItem={deleteItem} />;
           }}
+          keyExtractor={(item) => item.id}
         />
       ) : (
         <View style={styles.emptyViewContainer}>

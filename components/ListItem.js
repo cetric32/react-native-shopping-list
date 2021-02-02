@@ -1,16 +1,12 @@
 import React from 'react';
 import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
-import Icon from 'react-native-vector-icons/dist/FontAwesome';
+import Icon from 'react-native-vector-icons/dist/FontAwesome5';
 export default function ListItem({item, deleteItem}) {
-  const formatNumber = (number) => {
-    return number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
-  };
   return (
     <TouchableOpacity style={styles.listItem}>
       <View style={styles.listItemView}>
-        <Text style={styles.listItemText}>{item.text}</Text>
-        <Text style={styles.listItemText}>{formatNumber(item.quantity)}</Text>
-        <Text style={styles.listItemText}>{formatNumber(item.price)}</Text>
+        <Icon name="shopping-basket" size={20} color="green" />
+        <Text style={styles.listItemText}> {item.text}</Text>
         <Icon
           name="trash"
           size={20}
@@ -36,5 +32,5 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     alignItems: 'center',
   },
-  listItemText: {color: 'black', fontSize: 18, width: '27%'},
+  listItemText: {color: 'black', fontSize: 18, width: '80%'},
 });
