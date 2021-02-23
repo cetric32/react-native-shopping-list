@@ -2,17 +2,33 @@ import React from 'react';
 import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import Icon from 'react-native-vector-icons/dist/FontAwesome5';
 import CheckBox from '@react-native-community/checkbox';
+import {Tooltip, Text as EText} from 'react-native-elements';
 
 export default function ListItem({item, deleteItem, toggleCheckBox}) {
   return (
     <TouchableOpacity style={styles.listItem}>
       <View style={styles.listItemView}>
-        <CheckBox
-          value={item.isComplete}
-          onValueChange={(newValue) => toggleCheckBox(item.id, newValue)}
-        />
+        <Tooltip
+          popover={
+            <EText>
+              Click to {item.isComplete ? 'make Incomplete' : 'Complete'}
+            </EText>
+          }>
+          <CheckBox
+            value={item.isComplete}
+            onValueChange={(newValue) => toggleCheckBox(item.id, newValue)}
+          />
+        </Tooltip>
+
         <Icon name="shopping-basket" size={20} color="green" />
-        <Text style={styles.listItemText(item.isComplete)}> {item.text}</Text>
+        <Text
+          style={styles.listItemText(item.isComplete)}
+          onPress={() => {
+            toggleCheckBox(item.id, !item.isComplete);
+          }}>
+          {' '}
+          {item.text}
+        </Text>
         <Icon
           name="trash"
           size={20}
