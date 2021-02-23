@@ -22,6 +22,24 @@ export default function ShoppingView({navigation}) {
     });
   }, []);
 
+  const toggleCheckBox = (id, value) => {
+    getData().then((result) => {
+      let newResult = result.map((item) => {
+        if (item.id === id) {
+          item.isComplete = value;
+        }
+
+        return item;
+      });
+
+      storeData(newResult).then((res) => {
+        if (res) {
+          setItems(newResult);
+        }
+      });
+    });
+  };
+
   const storeData = async (value) => {
     try {
       const jsonValue = JSON.stringify(value);
@@ -84,6 +102,7 @@ export default function ShoppingView({navigation}) {
         text: text,
         price: price,
         quantity: quantity,
+        isComplete: false,
       });
 
       storeData(result).then((res) => {
@@ -102,7 +121,13 @@ export default function ShoppingView({navigation}) {
         <FlatList
           data={items}
           renderItem={({item}) => {
-            return <ListItem item={item} deleteItem={deleteItem} />;
+            return (
+              <ListItem
+                item={item}
+                deleteItem={deleteItem}
+                toggleCheckBox={toggleCheckBox}
+              />
+            );
           }}
           keyExtractor={(item) => item.id}
         />

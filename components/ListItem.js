@@ -1,12 +1,18 @@
 import React from 'react';
 import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import Icon from 'react-native-vector-icons/dist/FontAwesome5';
-export default function ListItem({item, deleteItem}) {
+import CheckBox from '@react-native-community/checkbox';
+
+export default function ListItem({item, deleteItem, toggleCheckBox}) {
   return (
     <TouchableOpacity style={styles.listItem}>
       <View style={styles.listItemView}>
+        <CheckBox
+          value={item.isComplete}
+          onValueChange={(newValue) => toggleCheckBox(item.id, newValue)}
+        />
         <Icon name="shopping-basket" size={20} color="green" />
-        <Text style={styles.listItemText}> {item.text}</Text>
+        <Text style={styles.listItemText(item.isComplete)}> {item.text}</Text>
         <Icon
           name="trash"
           size={20}
@@ -32,5 +38,17 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     alignItems: 'center',
   },
-  listItemText: {color: 'black', fontSize: 18, width: '80%'},
+  listItemText: (value = false) => {
+    let result = {
+      color: 'black',
+      fontSize: 18,
+      width: '80%',
+    };
+
+    let line = {
+      textDecorationStyle: 'solid',
+      textDecorationLine: 'line-through',
+    };
+    return value ? {...result, ...line} : result;
+  },
 });
